@@ -13,12 +13,13 @@ import com.google.android.gms.gcm.TaskParams;
 import com.julia.android.stockhawk.data.QuoteColumns;
 import com.julia.android.stockhawk.data.QuoteProvider;
 import com.julia.android.stockhawk.rest.Utils;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class StockTaskService extends GcmTaskService{
   private String LOG_TAG = StockTaskService.class.getSimpleName();
