@@ -1,45 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.julia.android.stockhawk" >
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-
-    <permission
-        android:name="com.google.android.gcm.demo.permission.C2D_MESSAGE"
-        android:protectionLevel="signature" />
-
-    <uses-permission
-        android:name="com.google.android.gcm.demo.permission.C2D_MESSAGE" />
+    <uses-permission android:name="android.Manifest.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
-        android:allowBackup="true"
+        android:name=".StockHawkApp"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
-
-        <activity
-            android:name="com.julia.android.stockhawk.ui.MyStocksActivity"
-            android:label="@string/app_name" >
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name="com.julia.android.stockhawk.service.StockTaskService"
-            android:permission="com.google.android.gms.permission.BIND_NETWORK_TASK_SERVICE"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.google.android.gms.gcm.ACTION_TASK_READY"/>
-            </intent-filter>
-        </service>
-        <service android:name="com.julia.android.stockhawk.service.StockIntentService" />
+
+        <service
+            android:name=".sync.QuoteIntentService"
+            android:exported="false" />
+
         <provider
-            android:authorities="com.julia.android.stockhawk.data.QuoteProvider"
-            android:name=".data.generated.QuoteProvider"
-            android:exported="false"/>
+            android:name=".data.StockProvider"
+            android:authorities="com.julia.android.stockhawk"
+            android:exported="false" />
+
+        <service
+            android:name=".sync.QuoteJobService"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
     </application>
 
 </manifest>
