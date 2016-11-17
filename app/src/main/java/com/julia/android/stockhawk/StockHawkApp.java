@@ -11,7 +11,9 @@ public class StockHawkApp extends Application {
         super.onCreate();
 
         if (BuildConfig.DEBUG) {
+            /** Remove all planted trees. */
             Timber.uprootAll();
+            /** Add a new logging tree for debug builds. */
             Timber.plant(new Timber.DebugTree());
         }
     }

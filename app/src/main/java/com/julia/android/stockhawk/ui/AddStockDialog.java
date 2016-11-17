@@ -53,7 +53,9 @@ public class AddStockDialog extends DialogFragment {
         builder.setNegativeButton(getString(R.string.dialog_cancel), null);
 
         Dialog dialog = builder.create();
-        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        }
         return dialog;
     }
 

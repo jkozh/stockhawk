@@ -10,11 +10,11 @@ import com.julia.android.stockhawk.data.Contract.Quote;
 public class DbHelper extends SQLiteOpenHelper {
 
 
-    static final String NAME = "StockHawk.db";
+    private static final String NAME = "StockHawk.db";
     private static final int VERSION = 1;
 
 
-    public DbHelper(Context context) {
+    DbHelper(Context context) {
         super(context, NAME, null, VERSION);
     }
 

@@ -1,23 +1,22 @@
 package com.julia.android.stockhawk.data;
 
-
 import android.net.Uri;
 import android.provider.BaseColumns;
 
 public class Contract {
 
-    public static final String AUTHORITY = "com.julia.android.stockhawk";
+    static final String AUTHORITY = "com.julia.android.stockhawk";
 
-    public static final Uri BASE_URI = Uri.parse("content://" + AUTHORITY);
+    private static final Uri BASE_URI = Uri.parse("content://" + AUTHORITY);
 
-    public static final String PATH_QUOTE = "quote";
-    public static final String PATH_QUOTE_WITH_SYMBOL = "quote/*";
+    static final String PATH_QUOTE = "quote";
+    static final String PATH_QUOTE_WITH_SYMBOL = "quote/*";
 
     public static final class Quote implements BaseColumns {
 
         public static final Uri uri = BASE_URI.buildUpon().appendPath(PATH_QUOTE).build();
 
-        public static final String TABLE_NAME = "quotes";
+        static final String TABLE_NAME = "quotes";
 
         public static final String COLUMN_SYMBOL = "symbol";
         public static final String COLUMN_PRICE = "price";
@@ -46,7 +45,7 @@ public class Contract {
             return uri.buildUpon().appendPath(symbol).build();
         }
 
-        public static String getStockFromUri(Uri uri) {
+        static String getStockFromUri(Uri uri) {
             return uri.getLastPathSegment();
         }
 

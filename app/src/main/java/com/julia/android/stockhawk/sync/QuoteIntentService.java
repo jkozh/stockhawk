@@ -3,6 +3,8 @@ package com.julia.android.stockhawk.sync;
 import android.app.IntentService;
 import android.content.Intent;
 
+import com.julia.android.stockhawk.util.Utility;
+
 import timber.log.Timber;
 
 
