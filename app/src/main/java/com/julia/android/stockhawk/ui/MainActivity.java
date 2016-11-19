@@ -1,5 +1,9 @@
 package com.julia.android.stockhawk.ui;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -11,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,6 +32,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
+import static com.julia.android.stockhawk.sync.QuoteSyncJob.ACTION_DATA_UPDATED;
+import static com.julia.android.stockhawk.sync.QuoteSyncJob.EXTRA_MESSAGE;
+
 public class MainActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor>,
         SwipeRefreshLayout.OnRefreshListener,
@@ -42,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements
     @BindView(R.id.error)
     TextView error;
     private StockAdapter adapter;
+
 
     @Override
     public void onClick(String symbol) {
@@ -82,7 +91,28 @@ public class MainActivity extends AppCompatActivity implements
             }
         }).attachToRecyclerView(recyclerView);
 
+        registerReceiver(broadcastReceiver, new IntentFilter(ACTION_DATA_UPDATED));
 
+    }
+
+    /**
+     * Receives the non-existing stock name was added by the user
+     */
+    BroadcastReceiver broadcastReceiver =  new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle extras = intent.getExtras();
+            String message = extras.getString(EXTRA_MESSAGE);
+            Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+        }
+
+    };
+
+    @Override
+    protected void onStop() {
+        unregisterReceiver(broadcastReceiver);
+        super.onStop();
     }
 
     @Override

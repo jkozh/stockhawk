@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.julia.android.stockhawk.data.Contract.Quote;
 
 
-public class DbHelper extends SQLiteOpenHelper {
+class DbHelper extends SQLiteOpenHelper {
 
 
     private static final String NAME = "StockHawk.db";

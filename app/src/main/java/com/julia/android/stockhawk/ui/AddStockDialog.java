@@ -54,7 +54,8 @@ public class AddStockDialog extends DialogFragment {
 
         Dialog dialog = builder.create();
         if (dialog.getWindow() != null) {
-            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+            dialog.getWindow().setSoftInputMode(
+                    WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         }
         return dialog;
     }

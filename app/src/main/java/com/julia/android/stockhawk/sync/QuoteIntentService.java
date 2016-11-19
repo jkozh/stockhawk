@@ -14,9 +14,14 @@ public class QuoteIntentService extends IntentService {
         super(QuoteIntentService.class.getSimpleName());
     }
 
+    /**
+     * IntentServices create a new thread when you call the onHandleIntent method,
+     * and then kills that thread as soon as that onHandleIntent method returns.
+     */
     @Override
     protected void onHandleIntent(Intent intent) {
         Timber.d("Intent handled");
         QuoteSyncJob.getQuotes(getApplicationContext());
     }
+
 }

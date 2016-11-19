@@ -2,6 +2,8 @@ package com.julia.android.stockhawk;
 
 import android.app.Application;
 
+import com.facebook.stetho.Stetho;
+
 import timber.log.Timber;
 
 public class StockHawkApp extends Application {
@@ -16,5 +18,7 @@ public class StockHawkApp extends Application {
             /** Add a new logging tree for debug builds. */
             Timber.plant(new Timber.DebugTree());
         }
+
+        Stetho.initializeWithDefaults(this);
     }
 }
