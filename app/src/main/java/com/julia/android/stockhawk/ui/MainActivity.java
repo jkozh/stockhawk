@@ -14,6 +14,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.Menu;
@@ -49,12 +50,15 @@ public class MainActivity extends AppCompatActivity implements
     SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.error)
     TextView error;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
     private StockAdapter adapter;
 
 
     @Override
     public void onClick(String symbol) {
         Timber.d("Symbol clicked: %s", symbol);
+        startActivity(new Intent(this, StockDetailActivity.class));
     }
 
     @Override
@@ -63,6 +67,8 @@ public class MainActivity extends AppCompatActivity implements
 
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        setSupportActionBar(toolbar);
 
         adapter = new StockAdapter(this, this);
         recyclerView.setAdapter(adapter);
@@ -110,8 +116,16 @@ public class MainActivity extends AppCompatActivity implements
     };
 
     @Override
-    protected void onStop() {
-        unregisterReceiver(broadcastReceiver);
+    protected void onPause() {
+        try {
+            if (broadcastReceiver != null) {
+                unregisterReceiver(broadcastReceiver);
+                broadcastReceiver = null;
+            }
+        }
+        catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
         super.onStop();
     }
 

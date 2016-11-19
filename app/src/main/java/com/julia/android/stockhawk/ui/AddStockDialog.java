@@ -63,7 +63,9 @@ public class AddStockDialog extends DialogFragment {
     private void addStock() {
         Activity parent = getActivity();
         if (parent instanceof MainActivity) {
-            ((MainActivity) parent).addStock(stock.getText().toString());
+            // Removing whitespace from entered stock
+            String formatStock = stock.getText().toString().replaceAll("\\s+","");
+            ((MainActivity) parent).addStock(formatStock);
         }
         dismissAllowingStateLoss();
     }

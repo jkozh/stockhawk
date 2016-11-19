@@ -13,4 +13,5 @@
     <dimen name="fab_pressed_translation_z">12dp</dimen>
     <dimen name="dialog_margin_small">4dp</dimen>
     <dimen name="dialog_margin_large">16dp</dimen>
+    <dimen name="toolbar_height">300dp</dimen>
 </resources>
