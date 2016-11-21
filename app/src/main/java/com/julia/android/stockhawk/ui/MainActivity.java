@@ -1,6 +1,7 @@
 package com.julia.android.stockhawk.ui;
 
 import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -12,6 +13,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -29,9 +31,19 @@ import com.julia.android.stockhawk.data.PrefUtils;
 import com.julia.android.stockhawk.sync.QuoteSyncJob;
 import com.julia.android.stockhawk.util.Utility;
 
+import java.io.IOException;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Map;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
+import yahoofinance.Stock;
+import yahoofinance.YahooFinance;
+import yahoofinance.histquotes.HistoricalQuote;
+import yahoofinance.histquotes.Interval;
+import yahoofinance.quotes.stock.StockQuote;
 
 import static com.julia.android.stockhawk.sync.QuoteSyncJob.ACTION_DATA_UPDATED;
 import static com.julia.android.stockhawk.sync.QuoteSyncJob.EXTRA_MESSAGE;
@@ -41,7 +53,6 @@ public class MainActivity extends AppCompatActivity implements
         SwipeRefreshLayout.OnRefreshListener,
         StockAdapter.StockAdapterOnClickHandler {
 
-    private static final int STOCK_LOADER = 0;
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
     @BindView(R.id.fab)
@@ -52,13 +63,15 @@ public class MainActivity extends AppCompatActivity implements
     TextView error;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    private StockAdapter adapter;
 
+    private StockAdapter adapter;
+    private static final int STOCK_LOADER = 0;
 
     @Override
     public void onClick(String symbol) {
-        Timber.d("Symbol clicked: %s", symbol);
-        startActivity(new Intent(this, StockDetailActivity.class));
+        Intent intent = new Intent(this, StockDetailActivity.class);
+        intent.putExtra(StockDetailActivity.EXTRA_SYMBOL, symbol);
+        startActivity(intent);
     }
 
     @Override
@@ -79,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements
         onRefresh();
 
 
+
         QuoteSyncJob.initialize(this);
         getSupportLoaderManager().initLoader(STOCK_LOADER, null, this);
 
@@ -96,6 +110,8 @@ public class MainActivity extends AppCompatActivity implements
                 getContentResolver().delete(Contract.Quote.makeUriForStock(symbol), null, null);
             }
         }).attachToRecyclerView(recyclerView);
+
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
         registerReceiver(broadcastReceiver, new IntentFilter(ACTION_DATA_UPDATED));
 
@@ -142,7 +158,6 @@ public class MainActivity extends AppCompatActivity implements
             swipeRefreshLayout.setRefreshing(false);
             Toast.makeText(this, R.string.toast_no_connectivity, Toast.LENGTH_LONG).show();
         } else if (PrefUtils.getStocks(this).size() == 0) {
-            Timber.d("WHYAREWEHERE");
             swipeRefreshLayout.setRefreshing(false);
             error.setText(getString(R.string.error_no_stocks));
             error.setVisibility(View.VISIBLE);

@@ -3,6 +3,8 @@ package com.julia.android.stockhawk.ui;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -83,13 +85,21 @@ class StockAdapter extends RecyclerView.Adapter<StockAdapter.StockViewHolder> {
         String change = dollarFormatWithPlus.format(rawAbsoluteChange);
         String percentage = percentageFormat.format(percentageChange / 100);
 
-        if (PrefUtils.getDisplayMode(context)
-                .equals(context.getString(R.string.pref_display_mode_absolute_key))) {
+        if (PrefUtils.getDisplayMode(context).equals(context.getString(R.string.pref_display_mode_absolute_key))) {
             holder.change.setText(change);
         } else {
             holder.change.setText(percentage);
         }
 
+        if(position % 2 == 1) {
+            // Set a background color for RecyclerView regular row
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(
+                    holder.itemView.getContext(), R.color.dark_blue));
+        } else {
+            // Set the background color for alternate row
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(
+                    holder.itemView.getContext(), R.color.light_blue));
+        }
 
     }
 
@@ -132,7 +142,6 @@ class StockAdapter extends RecyclerView.Adapter<StockAdapter.StockViewHolder> {
             clickHandler.onClick(cursor.getString(symbolColumn));
 
         }
-
 
     }
 }

@@ -7,6 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/dark_blue"
     tools:context=".ui.MainActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -19,7 +20,7 @@
             android:layout_height="?attr/actionBarSize"
             app:layout_collapseMode="pin"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            app:theme="@style/Base.ThemeOverlay.AppCompat.Dark.ActionBar" />
+            android:theme="@style/Base.ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     </android.support.design.widget.AppBarLayout>
 
@@ -32,9 +33,7 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin" />
+            android:layout_height="match_parent" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
@@ -46,7 +45,7 @@
         android:layout_margin="@dimen/fab_margin"
         android:onClick="button"
         android:src="@drawable/fab_plus"
-        app:backgroundTint="@color/material_blue_500"
+        app:backgroundTint="@color/colorAccent"
         app:borderWidth="0dp"
         android:elevation="@dimen/fab_elevation"
         app:fabSize="normal"

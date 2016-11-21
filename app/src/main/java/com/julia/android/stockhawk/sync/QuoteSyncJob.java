@@ -14,6 +14,7 @@ import com.julia.android.stockhawk.util.Utility;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -63,8 +64,9 @@ public final class QuoteSyncJob {
                 return;
             }
 
-            Map<String, Stock> quotes = YahooFinance.get(stockArray);
+            Timber.d(YahooFinance.get(stockArray).toString());
 
+            Map<String, Stock> quotes = YahooFinance.get(stockArray);
             Iterator<String> iterator = stockCopy.iterator();
 
             Timber.d(quotes.toString());

@@ -7,17 +7,17 @@
     </style>
 
     <style name="PercentChangeTextStyle">
-        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:textSize">@dimen/text_size_title_material</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="BidPriceTextStyle">
-        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:textSize">@dimen/text_size_title_material</item>
     </style>
 
     <style name="StockSymbolTextStyle">
-        <item name="android:textSize">@dimen/text_size_large</item>
+        <item name="android:textSize">@dimen/text_size_headline_material</item>
         <item name="android:textAllCaps">true</item>
     </style>
 </resources>

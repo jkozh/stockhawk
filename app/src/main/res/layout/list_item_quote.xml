@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="?android:attr/listPreferredItemHeight"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin">
+    android:paddingLeft="@dimen/activity_horizontal_margin_large"
+    android:paddingRight="@dimen/activity_horizontal_margin_large">
 
     <TextView
         android:id="@+id/symbol"
@@ -36,5 +35,7 @@
             android:background="@drawable/percent_change_pill_green"
             android:paddingLeft="@dimen/change_padding"
             android:paddingRight="@dimen/change_padding" />
+
     </LinearLayout>
+
 </LinearLayout>
