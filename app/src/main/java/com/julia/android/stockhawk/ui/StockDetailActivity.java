@@ -1,7 +1,11 @@
 package com.julia.android.stockhawk.ui;
 
+import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -10,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.julia.android.stockhawk.R;
+import com.julia.android.stockhawk.data.Contract;
 import com.julia.android.stockhawk.data.PrefUtils;
 import com.julia.android.stockhawk.model.StockQuoteItem;
 import com.julia.android.stockhawk.sync.FetchStockTask;
@@ -24,7 +29,7 @@ import butterknife.ButterKnife;
 import timber.log.Timber;
 
 public class StockDetailActivity extends AppCompatActivity implements FetchStockTask.Listener,
-        SwipeRefreshLayout.OnRefreshListener {
+        SwipeRefreshLayout.OnRefreshListener, LoaderManager.LoaderCallbacks<Cursor> {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -88,13 +93,6 @@ public class StockDetailActivity extends AppCompatActivity implements FetchStock
             error.setVisibility(View.VISIBLE);
         } else {
             error.setVisibility(View.GONE);
-
-            swipeRefreshLayout.post(new Runnable() {
-                @Override
-                public void run() {
-                    swipeRefreshLayout.setRefreshing(true);
-                }
-            });
         }
     }
 
@@ -102,24 +100,47 @@ public class StockDetailActivity extends AppCompatActivity implements FetchStock
     public void onStockFetched(StockQuoteItem stockQuoteItem) {
         swipeRefreshLayout.setRefreshing(false);
 
-        nameView.setText(stockQuoteItem.getName());
+        updateStockInfo(
+                stockQuoteItem.getName(),
+                stockQuoteItem.getPrice(),
+                stockQuoteItem.getChange(),
+                stockQuoteItem.getPercentChange());
+    }
 
-        String price = dollarFormat.format(stockQuoteItem.getPrice());
-        priceView.setText(price);
-
-        float rawAbsoluteChange = stockQuoteItem.getChange();
-
-        if (rawAbsoluteChange > 0) {
-            changeView.setTextColor(ContextCompat.getColor(
+    private void updateStockInfo(String name, float price, float change, float percentage) {
+        nameView.setText(name);
+        priceView.setText(dollarFormat.format(price));
+        if (change > 0) {
+            changeView.setBackgroundColor(ContextCompat.getColor(
                     getApplicationContext(), R.color.material_green_500));
         } else {
-            changeView.setTextColor(ContextCompat.getColor(
+            changeView.setBackgroundColor(ContextCompat.getColor(
                     getApplicationContext(), R.color.red));
         }
+        changeView.setText(getString(R.string.text_view_change,
+                dollarFormatWithPlus.format(change), percentageFormat.format(percentage / 100)));
+    }
 
-        String change = dollarFormatWithPlus.format(rawAbsoluteChange);
-        String percentage = percentageFormat.format(stockQuoteItem.getPercentChange() / 100);
-        changeView.setText(getString(R.string.text_view_change, change, percentage));
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(this,
+                Contract.Quote.uri,
+                Contract.Quote.QUOTE_COLUMNS,
+                null, null, Contract.Quote.COLUMN_SYMBOL);
+    }
 
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        if (data.getCount() != 0) {
+            updateStockInfo(
+                    data.getString(Contract.Quote.POSITION_NAME),
+                    data.getFloat(Contract.Quote.POSITION_PRICE),
+                    data.getFloat(Contract.Quote.POSITION_ABSOLUTE_CHANGE),
+                    data.getFloat(Contract.Quote.POSITION_PERCENTAGE_CHANGE));
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
     }
 }

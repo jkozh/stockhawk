@@ -11,7 +11,7 @@ class DbHelper extends SQLiteOpenHelper {
 
 
     private static final String NAME = "StockHawk.db";
-    private static final int VERSION = 1;
+    private static final int VERSION = 2;
 
 
     DbHelper(Context context) {
@@ -23,6 +23,7 @@ class DbHelper extends SQLiteOpenHelper {
         String builder = "CREATE TABLE " + Quote.TABLE_NAME + " (" +
                 Quote._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 Quote.COLUMN_SYMBOL + " TEXT NOT NULL, " +
+                Quote.COLUMN_NAME + " TEXT NOT NULL, " +
                 Quote.COLUMN_PRICE + " REAL NOT NULL, " +
                 Quote.COLUMN_ABSOLUTE_CHANGE + " REAL NOT NULL, " +
                 Quote.COLUMN_PERCENTAGE_CHANGE + " REAL NOT NULL, " +

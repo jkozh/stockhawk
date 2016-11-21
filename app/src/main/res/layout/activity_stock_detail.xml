@@ -33,7 +33,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_size_title_material"
-                android:layout_gravity="center" />
+                android:layout_gravity="center"
+                android:textColor="@color/white"/>
 
             <TextView
                 android:id="@+id/text_view_price"
@@ -44,8 +45,11 @@
 
             <TextView
                 android:id="@+id/text_view_change"
+                style="@style/PercentChangeTextStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingStart="@dimen/change_padding"
+                android:paddingEnd="@dimen/change_padding"
                 android:textSize="@dimen/text_size_headline_material"
                 android:layout_gravity="center" />
 
