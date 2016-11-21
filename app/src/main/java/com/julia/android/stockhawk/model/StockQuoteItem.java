@@ -6,6 +6,7 @@ public class StockQuoteItem {
     private float price;
     private float change;
     private float percentChange;
+    private StringBuilder historyBuilder;
 
     public String getName() {
         return name;
@@ -37,5 +38,13 @@ public class StockQuoteItem {
 
     public void setPercentChange(float percentChange) {
         this.percentChange = percentChange;
+    }
+
+    public void setHistoryBuilder(StringBuilder historyBuilder) {
+        this.historyBuilder = historyBuilder;
+    }
+
+    public StringBuilder getHistoryBuilder() {
+        return historyBuilder;
     }
 }

@@ -36,7 +36,7 @@ public final class QuoteSyncJob {
             "com.julia.android.stockhawk.ACTION_DATA_UPDATED";
     public static final String EXTRA_MESSAGE =
             "com.julia.android.stockhawk.EXTRA_MESSAGE";
-    private static final int PERIOD = 300000000; // I added 000
+    private static final int PERIOD = 300000;
     private static final int INITIAL_BACKOFF = 10000;
     private static final int PERIODIC_ID = 1;
 
@@ -55,10 +55,6 @@ public final class QuoteSyncJob {
             Set<String> stockCopy = new HashSet<>();
             stockCopy.addAll(stockPref);
             String[] stockArray = stockPref.toArray(new String[stockPref.size()]);
-            Timber.d("stockPref.toString():");
-            Timber.d(stockPref.toString());
-            Timber.d("stockCopy.toString():");
-            Timber.d(stockCopy.toString());
 
             if (stockArray.length == 0) {
                 return;
@@ -110,8 +106,6 @@ public final class QuoteSyncJob {
                     quoteCV.put(Contract.Quote.COLUMN_PRICE, price);
                     quoteCV.put(Contract.Quote.COLUMN_PERCENTAGE_CHANGE, percentChange);
                     quoteCV.put(Contract.Quote.COLUMN_ABSOLUTE_CHANGE, change);
-
-
                     quoteCV.put(Contract.Quote.COLUMN_HISTORY, historyBuilder.toString());
 
                     quoteCVs.add(quoteCV);

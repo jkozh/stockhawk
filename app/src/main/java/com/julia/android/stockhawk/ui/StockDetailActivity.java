@@ -13,6 +13,13 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import com.julia.android.stockhawk.R;
 import com.julia.android.stockhawk.data.Contract;
 import com.julia.android.stockhawk.data.PrefUtils;
@@ -22,6 +29,10 @@ import com.julia.android.stockhawk.util.Utility;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindView;
@@ -43,11 +54,15 @@ public class StockDetailActivity extends AppCompatActivity implements FetchStock
     TextView priceView;
     @BindView(R.id.text_view_change)
     TextView changeView;
+    @BindView(R.id.chart)
+    LineChart lineChartView;
 
     static final String EXTRA_SYMBOL = "EXTRA_SYMBOL";
     private DecimalFormat dollarFormatWithPlus;
     private DecimalFormat dollarFormat;
     private DecimalFormat percentageFormat;
+    private static final int STOCK_LOADER = 1;
+    String symbol;
 
 
     @Override
@@ -57,7 +72,7 @@ public class StockDetailActivity extends AppCompatActivity implements FetchStock
         setContentView(R.layout.activity_stock_detail);
         ButterKnife.bind(this);
 
-        String symbol = getIntent().getExtras().getString(EXTRA_SYMBOL);
+        symbol = getIntent().getExtras().getString(EXTRA_SYMBOL);
 
         toolbar.setTitle(symbol);
         setSupportActionBar(toolbar);
@@ -71,7 +86,7 @@ public class StockDetailActivity extends AppCompatActivity implements FetchStock
         swipeRefreshLayout.setRefreshing(true);
         onRefresh();
 
-        new FetchStockTask(this).execute(symbol);
+        getSupportLoaderManager().initLoader(STOCK_LOADER, null, this);
 
         dollarFormat = (DecimalFormat) NumberFormat.getCurrencyInstance(Locale.US);
         dollarFormatWithPlus = (DecimalFormat) NumberFormat.getCurrencyInstance(Locale.US);
@@ -84,6 +99,8 @@ public class StockDetailActivity extends AppCompatActivity implements FetchStock
 
     @Override
     public void onRefresh() {
+        new FetchStockTask(this).execute(symbol);
+
         if (!Utility.isNetworkAvailable(getApplicationContext())) {
             swipeRefreshLayout.setRefreshing(false);
             Toast.makeText(this, R.string.toast_no_connectivity, Toast.LENGTH_LONG).show();
@@ -100,11 +117,15 @@ public class StockDetailActivity extends AppCompatActivity implements FetchStock
     public void onStockFetched(StockQuoteItem stockQuoteItem) {
         swipeRefreshLayout.setRefreshing(false);
 
-        updateStockInfo(
-                stockQuoteItem.getName(),
-                stockQuoteItem.getPrice(),
-                stockQuoteItem.getChange(),
-                stockQuoteItem.getPercentChange());
+//        // Update an information about the stock in the app bar view
+//        updateStockInfo(
+//                stockQuoteItem.getName(),
+//                stockQuoteItem.getPrice(),
+//                stockQuoteItem.getChange(),
+//                stockQuoteItem.getPercentChange());
+//
+//        // Update graph view of the stock's value over time
+//        updateStockGraph(stockQuoteItem.getHistoryBuilder());
     }
 
     private void updateStockInfo(String name, float price, float change, float percentage) {
@@ -121,22 +142,56 @@ public class StockDetailActivity extends AppCompatActivity implements FetchStock
                 dollarFormatWithPlus.format(change), percentageFormat.format(percentage / 100)));
     }
 
+    private void updateStockGraph(String historyBuilder) {
+        ArrayList<Entry> entries = new ArrayList<>();
+        String[] lines = historyBuilder.split("\\n");
+        int count = -1;
+
+        for (String s: lines){
+            String[] ss = s.split(",");
+            entries.add(new Entry(count++, Float.valueOf(ss[1])));
+        }
+
+        // Create a DateFormatter object for displaying date in specified format.
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+
+        // Create a calendar object that will convert the date and time value in milliseconds to date.
+        Calendar calendar = Calendar.getInstance();
+        //calendar.setTimeInMillis(Long.valueOf(ss[0]));
+        formatter.format(calendar.getTime());
+
+        LineDataSet lineDataSet = new LineDataSet(entries, "# of Calls");
+
+        LineData data = new LineData(lineDataSet);
+        lineChartView.setData(data);
+
+    }
+
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return new CursorLoader(this,
                 Contract.Quote.uri,
                 Contract.Quote.QUOTE_COLUMNS,
-                null, null, Contract.Quote.COLUMN_SYMBOL);
+                Contract.Quote.COLUMN_SYMBOL + "=?",
+                new String[] {symbol},
+                Contract.Quote.COLUMN_SYMBOL);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        swipeRefreshLayout.setRefreshing(false);
         if (data.getCount() != 0) {
+            data.moveToFirst();
+
+            // Update an information about the stock in the app bar view
             updateStockInfo(
                     data.getString(Contract.Quote.POSITION_NAME),
                     data.getFloat(Contract.Quote.POSITION_PRICE),
                     data.getFloat(Contract.Quote.POSITION_ABSOLUTE_CHANGE),
                     data.getFloat(Contract.Quote.POSITION_PERCENTAGE_CHANGE));
+
+            // Update graph view the stock's value over time
+            updateStockGraph(data.getString(Contract.Quote.POSITION_HISTORY));
         }
     }
 
