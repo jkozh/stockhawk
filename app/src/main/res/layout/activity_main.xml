@@ -45,6 +45,7 @@
         android:layout_margin="@dimen/fab_margin"
         android:onClick="button"
         android:src="@drawable/fab_plus"
+        android:contentDescription="@string/add_stock_quote"
         app:backgroundTint="@color/colorAccent"
         app:borderWidth="0dp"
         android:elevation="@dimen/fab_elevation"

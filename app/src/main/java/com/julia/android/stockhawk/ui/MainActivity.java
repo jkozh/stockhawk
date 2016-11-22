@@ -1,7 +1,6 @@
 package com.julia.android.stockhawk.ui;
 
 import android.content.BroadcastReceiver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -18,7 +17,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,21 +29,10 @@ import com.julia.android.stockhawk.data.PrefUtils;
 import com.julia.android.stockhawk.sync.QuoteSyncJob;
 import com.julia.android.stockhawk.util.Utility;
 
-import java.io.IOException;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import timber.log.Timber;
-import yahoofinance.Stock;
-import yahoofinance.YahooFinance;
-import yahoofinance.histquotes.HistoricalQuote;
-import yahoofinance.histquotes.Interval;
-import yahoofinance.quotes.stock.StockQuote;
 
-import static com.julia.android.stockhawk.sync.QuoteSyncJob.ACTION_DATA_UPDATED;
+import static com.julia.android.stockhawk.sync.QuoteSyncJob.ACTION_ADD_STOCK;
 import static com.julia.android.stockhawk.sync.QuoteSyncJob.EXTRA_MESSAGE;
 
 public class MainActivity extends AppCompatActivity implements
@@ -71,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements
     public void onClick(String symbol) {
         Intent intent = new Intent(this, StockDetailActivity.class);
         intent.putExtra(StockDetailActivity.EXTRA_SYMBOL, symbol);
+        recyclerView.setContentDescription(symbol);
         startActivity(intent);
     }
 
@@ -113,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements
 
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
-        registerReceiver(broadcastReceiver, new IntentFilter(ACTION_DATA_UPDATED));
+        registerReceiver(broadcastReceiver, new IntentFilter(ACTION_ADD_STOCK));
 
     }
 
@@ -212,8 +200,7 @@ public class MainActivity extends AppCompatActivity implements
 
 
     private void setDisplayModeMenuItemIcon(MenuItem item) {
-        if (PrefUtils.getDisplayMode(this)
-                .equals(getString(R.string.pref_display_mode_absolute_key))) {
+        if (PrefUtils.getDisplayMode(this).equals(getString(R.string.pref_display_mode_absolute_key))) {
             item.setIcon(R.drawable.ic_percentage);
         } else {
             item.setIcon(R.drawable.ic_dollar);

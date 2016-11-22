@@ -14,7 +14,6 @@ import com.julia.android.stockhawk.util.Utility;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -32,8 +31,8 @@ import yahoofinance.quotes.stock.StockQuote;
 public final class QuoteSyncJob {
 
     private static final int ONE_OFF_ID = 2;
-    public static final String ACTION_DATA_UPDATED =
-            "com.julia.android.stockhawk.ACTION_DATA_UPDATED";
+    public static final String ACTION_ADD_STOCK =
+            "com.julia.android.stockhawk.ACTION_ADD_STOCK";
     public static final String EXTRA_MESSAGE =
             "com.julia.android.stockhawk.EXTRA_MESSAGE";
     private static final int PERIOD = 300000;
@@ -112,7 +111,7 @@ public final class QuoteSyncJob {
                 } else {
                     String message = context.getString(R.string.toast_stock_not_exist, symbol);
                     Timber.d("Not existing stock '%s' was removed", symbol);
-                    Intent i = new Intent(ACTION_DATA_UPDATED);
+                    Intent i = new Intent(ACTION_ADD_STOCK);
                     // Data need to pass to activity
                     i.putExtra(EXTRA_MESSAGE, message);
                     context.sendBroadcast(i);
