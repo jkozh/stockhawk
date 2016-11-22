@@ -13,8 +13,8 @@
     <dimen name="dialog_margin_small">4dp</dimen>
     <dimen name="dialog_margin_large">16dp</dimen>
     <dimen name="appbar_padding_bottom">25dp</dimen>
-
     <dimen name="action_bar_content_inset_with_nav">72dp</dimen>
+    <dimen name="chart_padding">20dp</dimen>
 
     <dimen name="text_size_display_2_material">45sp</dimen>
     <dimen name="text_size_headline_material">24sp</dimen>

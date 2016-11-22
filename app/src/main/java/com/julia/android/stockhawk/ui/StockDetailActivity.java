@@ -14,16 +14,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.julia.android.stockhawk.R;
 import com.julia.android.stockhawk.data.Contract;
 import com.julia.android.stockhawk.data.PrefUtils;
-import com.julia.android.stockhawk.model.StockQuoteItem;
 import com.julia.android.stockhawk.sync.FetchStockTask;
 import com.julia.android.stockhawk.util.Utility;
 
@@ -37,7 +37,6 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import timber.log.Timber;
 
 public class StockDetailActivity extends AppCompatActivity implements FetchStockTask.Listener,
         SwipeRefreshLayout.OnRefreshListener, LoaderManager.LoaderCallbacks<Cursor> {
@@ -114,57 +113,78 @@ public class StockDetailActivity extends AppCompatActivity implements FetchStock
     }
 
     @Override
-    public void onStockFetched(StockQuoteItem stockQuoteItem) {
+    public void onStockFetched() {
         swipeRefreshLayout.setRefreshing(false);
-
-//        // Update an information about the stock in the app bar view
-//        updateStockInfo(
-//                stockQuoteItem.getName(),
-//                stockQuoteItem.getPrice(),
-//                stockQuoteItem.getChange(),
-//                stockQuoteItem.getPercentChange());
-//
-//        // Update graph view of the stock's value over time
-//        updateStockGraph(stockQuoteItem.getHistoryBuilder());
     }
 
     private void updateStockInfo(String name, float price, float change, float percentage) {
         nameView.setText(name);
         priceView.setText(dollarFormat.format(price));
         if (change > 0) {
-            changeView.setBackgroundColor(ContextCompat.getColor(
-                    getApplicationContext(), R.color.material_green_500));
+            changeView.setBackgroundResource(R.drawable.percent_change_pill_green);
         } else {
-            changeView.setBackgroundColor(ContextCompat.getColor(
-                    getApplicationContext(), R.color.red));
+            changeView.setBackgroundResource(R.drawable.percent_change_pill_red);
         }
         changeView.setText(getString(R.string.text_view_change,
                 dollarFormatWithPlus.format(change), percentageFormat.format(percentage / 100)));
     }
 
     private void updateStockGraph(String historyBuilder) {
-        ArrayList<Entry> entries = new ArrayList<>();
+        List<Entry> entries = new ArrayList<>();
         String[] lines = historyBuilder.split("\\n");
-        int count = -1;
 
-        for (String s: lines){
-            String[] ss = s.split(",");
-            entries.add(new Entry(count++, Float.valueOf(ss[1])));
-        }
+        int linesLength = lines.length;
+        final String[] dates = new String[linesLength];
 
         // Create a DateFormatter object for displaying date in specified format.
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
 
         // Create a calendar object that will convert the date and time value in milliseconds to date.
         Calendar calendar = Calendar.getInstance();
-        //calendar.setTimeInMillis(Long.valueOf(ss[0]));
-        formatter.format(calendar.getTime());
 
-        LineDataSet lineDataSet = new LineDataSet(entries, "# of Calls");
+        for (int i = 0; i < linesLength; i++){
+            // show the chart in the right order
+            String[] dateAndPrice = lines[linesLength - i - 1].split(",");
+            calendar.setTimeInMillis(Long.valueOf(dateAndPrice[0]));
+            dates[i] = formatter.format(calendar.getTime());
+            entries.add(new Entry(i, Float.valueOf(dateAndPrice[1])));
+        }
 
-        LineData data = new LineData(lineDataSet);
-        lineChartView.setData(data);
+        LineDataSet dataSet = new LineDataSet(entries, getString(R.string.chart_label));
+        XAxis xAxis = lineChartView.getXAxis();
 
+        // Set Colors
+        dataSet.setValueTextColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
+        LineData lineData = new LineData(dataSet);
+        xAxis.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
+        lineChartView.getAxisLeft().setTextColor(
+                ContextCompat.getColor(getApplicationContext(), R.color.white));
+        lineChartView.getAxisRight().setTextColor(
+                ContextCompat.getColor(getApplicationContext(), R.color.white));
+        lineChartView.getLegend().setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
+
+        // Set date labels for x-axis
+        xAxis.setValueFormatter(new IAxisValueFormatter() {
+
+            @Override
+            public String getFormattedValue(float value, AxisBase axis) {
+                // "value" represents the position of the label on the axis (x or y)
+                return dates[(int) value];
+            }
+
+            /** this is only needed if numbers are returned, else return 0 */
+            @Override
+            public int getDecimalDigits() {
+                return 0;
+            }
+
+        });
+
+        Description description = new Description();
+        description.setText(getString(R.string.chart_description));
+        description.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
+        lineChartView.setDescription(description);
+        lineChartView.setData(lineData);
     }
 
     @Override
@@ -183,7 +203,7 @@ public class StockDetailActivity extends AppCompatActivity implements FetchStock
         if (data.getCount() != 0) {
             data.moveToFirst();
 
-            // Update an information about the stock in the app bar view
+            // Update an information of the selected stock in the app bar view
             updateStockInfo(
                     data.getString(Contract.Quote.POSITION_NAME),
                     data.getFloat(Contract.Quote.POSITION_PRICE),

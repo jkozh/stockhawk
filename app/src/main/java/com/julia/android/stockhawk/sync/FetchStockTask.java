@@ -26,7 +26,7 @@ public class FetchStockTask extends AsyncTask<String, Void, StockQuoteItem> {
 
     // Interface definition for a callback to be invoked when trailers are loaded
     public interface Listener {
-        void onStockFetched(StockQuoteItem stockQuoteItem);
+        void onStockFetched();
     }
 
     @Override
@@ -88,7 +88,7 @@ public class FetchStockTask extends AsyncTask<String, Void, StockQuoteItem> {
     @Override
     protected void onPostExecute(StockQuoteItem stockQuoteItem) {
         if (stockQuoteItem != null) {
-            mListener.onStockFetched(stockQuoteItem);
+            mListener.onStockFetched();
         }
     }
 
