@@ -61,7 +61,8 @@ public class StockDetailActivity extends AppCompatActivity implements FetchStock
     private DecimalFormat dollarFormat;
     private DecimalFormat percentageFormat;
     private static final int STOCK_LOADER = 1;
-    String symbol;
+    private String symbol;
+    private boolean chartAnimated = false;
 
 
     @Override
@@ -185,6 +186,15 @@ public class StockDetailActivity extends AppCompatActivity implements FetchStock
         description.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
         lineChartView.setDescription(description);
         lineChartView.setData(lineData);
+
+        /**
+         * animate the chart only once when detail view opened
+         * animating it after each refresh kinda annoying for the user
+         */
+        if (!chartAnimated) {
+            lineChartView.animateX(2000);
+            chartAnimated = true;
+        }
     }
 
     @Override
