@@ -10,4 +10,6 @@
     <color name="dark_blue">#2e2d3d</color>
     <color name="light_blue">#363547</color>
 
+    <color name="widget_background">#80000000</color>
+
 </resources>

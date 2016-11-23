@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/widget_title_padding">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/widget_background">
+
+        <LinearLayout
+            android:id="@+id/widget_layout_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/material_teal_500"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/widget_padding"
+            android:paddingEnd="@dimen/widget_padding">
+
+            <ImageView
+                android:id="@+id/widget_img_launcher"
+                android:layout_width="@dimen/widget_icon_size"
+                android:layout_height="@dimen/widget_icon_size"
+                android:layout_gravity="center_vertical"
+                android:src="@mipmap/ic_launcher"
+                android:contentDescription="@string/stock_widget_icon" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name"
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/white"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold"
+                android:padding="@dimen/widget_title_padding"/>
+
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/widget_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </ListView>
+
+    </LinearLayout>
+
+</FrameLayout>

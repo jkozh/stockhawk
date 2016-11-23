@@ -42,13 +42,26 @@
         <provider
             android:name=".data.StockProvider"
             android:authorities="com.julia.android.stockhawk"
-            android:exported="false" />
+            android:exported="true" />
 
         <service
             android:name=".sync.QuoteJobService"
             android:enabled="true"
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <service
+            android:name=".appwidget.StockWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
+        <receiver android:name=".appwidget.StockCollectionWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/stock_widget_info" />
+        </receiver>
     </application>
 
 </manifest>

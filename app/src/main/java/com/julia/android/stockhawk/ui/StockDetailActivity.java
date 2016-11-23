@@ -27,8 +27,6 @@ import com.julia.android.stockhawk.data.PrefUtils;
 import com.julia.android.stockhawk.sync.FetchStockTask;
 import com.julia.android.stockhawk.util.Utility;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -37,6 +35,10 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.julia.android.stockhawk.util.Formatter.getDollarFormat;
+import static com.julia.android.stockhawk.util.Formatter.getDollarFormatWithPlus;
+import static com.julia.android.stockhawk.util.Formatter.getPercentageFormat;
 
 public class StockDetailActivity extends AppCompatActivity implements FetchStockTask.Listener,
         SwipeRefreshLayout.OnRefreshListener, LoaderManager.LoaderCallbacks<Cursor> {
@@ -57,9 +59,6 @@ public class StockDetailActivity extends AppCompatActivity implements FetchStock
     LineChart lineChartView;
 
     static final String EXTRA_SYMBOL = "EXTRA_SYMBOL";
-    private DecimalFormat dollarFormatWithPlus;
-    private DecimalFormat dollarFormat;
-    private DecimalFormat percentageFormat;
     private static final int STOCK_LOADER = 1;
     private String symbol;
     private boolean chartAnimated = false;
@@ -87,14 +86,6 @@ public class StockDetailActivity extends AppCompatActivity implements FetchStock
         onRefresh();
 
         getSupportLoaderManager().initLoader(STOCK_LOADER, null, this);
-
-        dollarFormat = (DecimalFormat) NumberFormat.getCurrencyInstance(Locale.US);
-        dollarFormatWithPlus = (DecimalFormat) NumberFormat.getCurrencyInstance(Locale.US);
-        dollarFormatWithPlus.setPositivePrefix("+$");
-        percentageFormat = (DecimalFormat) NumberFormat.getPercentInstance(Locale.getDefault());
-        percentageFormat.setMaximumFractionDigits(2);
-        percentageFormat.setMinimumFractionDigits(2);
-        percentageFormat.setPositivePrefix("+");
     }
 
     @Override
@@ -120,14 +111,14 @@ public class StockDetailActivity extends AppCompatActivity implements FetchStock
 
     private void updateStockInfo(String name, float price, float change, float percentage) {
         nameView.setText(name);
-        priceView.setText(dollarFormat.format(price));
+        priceView.setText(getDollarFormat(price));
         if (change > 0) {
             changeView.setBackgroundResource(R.drawable.percent_change_pill_green);
         } else {
             changeView.setBackgroundResource(R.drawable.percent_change_pill_red);
         }
-        changeView.setText(getString(R.string.text_view_change,
-                dollarFormatWithPlus.format(change), percentageFormat.format(percentage / 100)));
+        changeView.setText(getString(R.string.text_view_change, getDollarFormatWithPlus(change),
+                getPercentageFormat(percentage)));
     }
 
     private void updateStockGraph(String historyBuilder) {
@@ -138,7 +129,7 @@ public class StockDetailActivity extends AppCompatActivity implements FetchStock
         final String[] dates = new String[linesLength];
 
         // Create a DateFormatter object for displaying date in specified format.
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy", Locale.US);
 
         // Create a calendar object that will convert the date and time value in milliseconds to date.
         Calendar calendar = Calendar.getInstance();

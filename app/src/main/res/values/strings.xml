@@ -43,5 +43,8 @@
     <string name="chart_label">Stock</string>
     <string name="chart_description">A 2-year comparison of the stock</string>
     <string name="add_stock_quote">Add a new stock</string>
+    <string name="stock_widget_icon">Stock widget icon</string>
+
+    <string name="symbol" translatable="false">symbol</string>
 
 </resources>

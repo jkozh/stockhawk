@@ -31,6 +31,7 @@ import yahoofinance.quotes.stock.StockQuote;
 public final class QuoteSyncJob {
 
     private static final int ONE_OFF_ID = 2;
+    public static final String ACTION_DATA_UPDATED = "com.julia.android.stockhawk.ACTION_DATA_UPDATED";
     public static final String ACTION_ADD_STOCK =
             "com.julia.android.stockhawk.ACTION_ADD_STOCK";
     public static final String EXTRA_MESSAGE =
@@ -110,7 +111,6 @@ public final class QuoteSyncJob {
                     quoteCVs.add(quoteCV);
                 } else {
                     String message = context.getString(R.string.toast_stock_not_exist, symbol);
-                    Timber.d("Not existing stock '%s' was removed", symbol);
                     Intent i = new Intent(ACTION_ADD_STOCK);
                     // Data need to pass to activity
                     i.putExtra(EXTRA_MESSAGE, message);
@@ -124,6 +124,9 @@ public final class QuoteSyncJob {
                     .bulkInsert(
                             Contract.Quote.uri,
                             quoteCVs.toArray(new ContentValues[quoteCVs.size()]));
+
+            Intent dataUpdatedIntent = new Intent(ACTION_DATA_UPDATED);
+            context.sendBroadcast(dataUpdatedIntent);
 
 
         } catch (IOException exception) {

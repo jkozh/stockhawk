@@ -15,6 +15,11 @@
     <dimen name="appbar_padding_bottom">25dp</dimen>
     <dimen name="action_bar_content_inset_with_nav">72dp</dimen>
     <dimen name="chart_padding">20dp</dimen>
+    <dimen name="widget_height">110dp</dimen>
+    <dimen name="widget_width">210dp</dimen>
+    <dimen name="widget_title_padding">8dp</dimen>
+    <dimen name="widget_icon_size">32dp</dimen>
+    <dimen name="widget_padding">5dp</dimen>
 
     <dimen name="text_size_display_2_material">45sp</dimen>
     <dimen name="text_size_headline_material">24sp</dimen>
