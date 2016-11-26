@@ -23,17 +23,19 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.v4.app.TaskStackBuilder;
 import android.widget.RemoteViews;
 
 import com.julia.android.stockhawk.R;
 import com.julia.android.stockhawk.sync.QuoteSyncJob;
 import com.julia.android.stockhawk.ui.MainActivity;
+import com.julia.android.stockhawk.ui.StockDetailActivity;
 
 /**
  * Implementation of App Widget functionality.
  */
 public class StockCollectionWidget extends AppWidgetProvider {
+
+    public static String TOAST_ACTION = "TOAST_ACTION";
 
     /**
      * Called in response to the ACTION_APPWIDGET_UPDATE
@@ -57,10 +59,10 @@ public class StockCollectionWidget extends AppWidgetProvider {
             setRemoteAdapter(context, views);
 
             // Set up collection items
-            Intent clickIntentTemplate = new Intent(context, MainActivity.class);
-            PendingIntent clickPendingIntentTemplate = TaskStackBuilder.create(context)
-                    .addNextIntentWithParentStack(clickIntentTemplate)
-                    .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+            Intent clickIntentTemplate = new Intent(context, StockDetailActivity.class);
+
+            PendingIntent clickPendingIntentTemplate = PendingIntent.getActivity(context, 0,
+                    clickIntentTemplate, PendingIntent.FLAG_UPDATE_CURRENT);
             views.setPendingIntentTemplate(R.id.widget_list, clickPendingIntentTemplate);
 
             // Instruct the widget manager to update the widget

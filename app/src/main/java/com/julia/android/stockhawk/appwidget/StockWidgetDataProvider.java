@@ -26,6 +26,7 @@ import android.widget.RemoteViewsService;
 
 import com.julia.android.stockhawk.R;
 import com.julia.android.stockhawk.data.Contract;
+import com.julia.android.stockhawk.ui.StockDetailActivity;
 import com.julia.android.stockhawk.util.Formatter;
 
 /**
@@ -101,7 +102,7 @@ class StockWidgetDataProvider implements RemoteViewsService.RemoteViewsFactory {
         }
 
         final Intent fillInIntent = new Intent();
-        fillInIntent.putExtra(mContext.getString(R.string.symbol), symbol);
+        fillInIntent.putExtra(StockDetailActivity.EXTRA_SYMBOL, symbol);
         view.setOnClickFillInIntent(R.id.list_item, fillInIntent);
         return view;
     }

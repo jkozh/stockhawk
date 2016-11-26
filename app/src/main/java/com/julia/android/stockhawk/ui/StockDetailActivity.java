@@ -74,7 +74,7 @@ public class StockDetailActivity extends AppCompatActivity implements FetchStock
     @BindView(R.id.chart)
     LineChart lineChartView;
 
-    static final String EXTRA_SYMBOL = "EXTRA_SYMBOL";
+    public static final String EXTRA_SYMBOL = "EXTRA_SYMBOL";
     private static final int STOCK_LOADER = 1;
     private String symbol;
     private boolean chartAnimated = false;
