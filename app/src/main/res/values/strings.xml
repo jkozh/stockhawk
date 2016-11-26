@@ -57,6 +57,8 @@
 
     <string name="text_view_change">%1$s (%2$s)</string>
 
+    <string name="empty_view_text">No stocks added.</string>
+
     <string name="chart_label">Stock</string>
     <string name="chart_description">A 2-year comparison of the stock</string>
     <string name="add_stock_quote">Add a new stock</string>
