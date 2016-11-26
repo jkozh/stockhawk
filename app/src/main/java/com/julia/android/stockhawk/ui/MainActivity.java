@@ -21,6 +21,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
+import android.net.NetworkRequest;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
@@ -43,6 +46,7 @@ import com.julia.android.stockhawk.R;
 import com.julia.android.stockhawk.data.Contract;
 import com.julia.android.stockhawk.data.PrefUtils;
 import com.julia.android.stockhawk.sync.QuoteSyncJob;
+import com.julia.android.stockhawk.util.NetworkCallback;
 import com.julia.android.stockhawk.util.Utility;
 
 import butterknife.BindView;
@@ -69,6 +73,8 @@ public class MainActivity extends AppCompatActivity implements
 
     private StockAdapter adapter;
     private static final int STOCK_LOADER = 0;
+    // Listen for network status changes via ConnectivityManager.NetworkCallback subclass.
+    private NetworkCallback networkCallback;
 
     @Override
     public void onClick(String symbol) {
@@ -111,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements
                 PrefUtils.removeStock(MainActivity.this, symbol);
                 getContentResolver().delete(Contract.Quote.makeUriForStock(symbol), null, null);
 
-                // check if all stocks had been removed, then show a message 'no stocks'
+                // check if all stocks had been removed, then show a message 'no stocks'.
                 if (PrefUtils.getStocks(getApplicationContext()).size() == 0) {
                     swipeRefreshLayout.setRefreshing(false);
                     error.setText(getString(R.string.error_no_stocks));
@@ -120,11 +126,11 @@ public class MainActivity extends AppCompatActivity implements
             }
         }).attachToRecyclerView(recyclerView);
 
+        // Add separation lines between items in RecyclerView
         recyclerView.addItemDecoration(
                 new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
         registerReceiver(broadcastReceiver, new IntentFilter(ACTION_ADD_STOCK));
-
 
     }
 
@@ -143,12 +149,32 @@ public class MainActivity extends AppCompatActivity implements
     };
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        // Register network callbacks
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        networkCallback = new NetworkCallback(this);
+
+        NetworkRequest.Builder networkRequestBuilder = new NetworkRequest.Builder();
+        networkRequestBuilder.addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET);
+        connectivityManager.registerNetworkCallback(
+                networkRequestBuilder.build(), networkCallback);
+
+    }
+
+    @Override
     protected void onPause() {
         try {
             if (broadcastReceiver != null) {
                 unregisterReceiver(broadcastReceiver);
                 broadcastReceiver = null;
             }
+
+            ConnectivityManager connectivityManager =
+                    (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+            connectivityManager.unregisterNetworkCallback(networkCallback);
+
         }
         catch (IllegalArgumentException e) {
             e.printStackTrace();

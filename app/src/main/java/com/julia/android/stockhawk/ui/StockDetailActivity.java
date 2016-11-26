@@ -195,7 +195,7 @@ public class StockDetailActivity extends AppCompatActivity implements FetchStock
         lineChartView.setData(lineData);
 
         /**
-         * animate the chart only once when detail view opened
+         * animate the chart only once when detail view first opened
          * animating it after each refresh kinda annoying for the user
          */
         if (!chartAnimated) {
