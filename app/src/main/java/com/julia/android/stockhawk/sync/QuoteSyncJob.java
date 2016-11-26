@@ -47,7 +47,8 @@ import yahoofinance.quotes.stock.StockQuote;
 public final class QuoteSyncJob {
 
     private static final int ONE_OFF_ID = 2;
-    public static final String ACTION_DATA_UPDATED = "com.julia.android.stockhawk.ACTION_DATA_UPDATED";
+    public static final String ACTION_DATA_UPDATED =
+            "com.julia.android.stockhawk.ACTION_DATA_UPDATED";
     public static final String ACTION_ADD_STOCK =
             "com.julia.android.stockhawk.ACTION_ADD_STOCK";
     public static final String EXTRA_MESSAGE =
@@ -141,13 +142,18 @@ public final class QuoteSyncJob {
                             Contract.Quote.uri,
                             quoteCVs.toArray(new ContentValues[quoteCVs.size()]));
 
-            Intent dataUpdatedIntent = new Intent(ACTION_DATA_UPDATED);
-            context.sendBroadcast(dataUpdatedIntent);
-
+            updateWidget(context);
 
         } catch (IOException exception) {
             Timber.e(exception, "Error fetching stock quotes");
         }
+    }
+
+    public static void updateWidget(Context context) {
+        // Setting the package ensures that only components in our app will receive the broadcast
+        Intent dataUpdatedIntent = new Intent(ACTION_DATA_UPDATED)
+                .setPackage(context.getPackageName());
+        context.sendBroadcast(dataUpdatedIntent);
     }
 
     synchronized public static void initialize(final Context context) {

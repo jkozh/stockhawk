@@ -123,6 +123,8 @@ public class MainActivity extends AppCompatActivity implements
                     error.setText(getString(R.string.error_no_stocks));
                     error.setVisibility(View.VISIBLE);
                 }
+
+                QuoteSyncJob.updateWidget(getApplicationContext());
             }
         }).attachToRecyclerView(recyclerView);
 

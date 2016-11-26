@@ -73,7 +73,7 @@ public class StockCollectionWidget extends AppWidgetProvider {
      * Called on broadcast created on item touch from the collection widget.
      */
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public void onReceive(@NonNull Context context, @NonNull Intent intent) {
         super.onReceive(context, intent);
         if (QuoteSyncJob.ACTION_DATA_UPDATED.equals(intent.getAction())) {
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
