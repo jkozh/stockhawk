@@ -26,7 +26,7 @@ import android.content.Intent;
 import com.julia.android.stockhawk.R;
 import com.julia.android.stockhawk.data.Contract;
 import com.julia.android.stockhawk.data.PrefUtils;
-import com.julia.android.stockhawk.util.Utility;
+import com.julia.android.stockhawk.util.NetworkUtility;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -182,7 +182,7 @@ public final class QuoteSyncJob {
 
     synchronized public static void syncImmediately(Context context) {
 
-        if (Utility.isNetworkAvailable(context)) {
+        if (NetworkUtility.isNetworkAvailable(context)) {
             Intent nowIntent = new Intent(context, QuoteIntentService.class);
             context.startService(nowIntent);
         } else {

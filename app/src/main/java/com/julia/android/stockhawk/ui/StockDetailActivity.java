@@ -41,7 +41,7 @@ import com.julia.android.stockhawk.R;
 import com.julia.android.stockhawk.data.Contract;
 import com.julia.android.stockhawk.data.PrefUtils;
 import com.julia.android.stockhawk.sync.FetchStockTask;
-import com.julia.android.stockhawk.util.Utility;
+import com.julia.android.stockhawk.util.NetworkUtility;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -107,7 +107,7 @@ public class StockDetailActivity extends AppCompatActivity implements FetchStock
     @Override
     public void onRefresh() {
 
-        if (!Utility.isNetworkAvailable(getApplicationContext())) {
+        if (!NetworkUtility.isNetworkAvailable(getApplicationContext())) {
             swipeRefreshLayout.setRefreshing(false);
             Toast.makeText(this, R.string.toast_no_connectivity, Toast.LENGTH_LONG).show();
         } else if (PrefUtils.getStocks(this).size() == 0) {

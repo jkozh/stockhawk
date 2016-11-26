@@ -47,7 +47,7 @@ import com.julia.android.stockhawk.data.Contract;
 import com.julia.android.stockhawk.data.PrefUtils;
 import com.julia.android.stockhawk.sync.QuoteSyncJob;
 import com.julia.android.stockhawk.util.NetworkCallback;
-import com.julia.android.stockhawk.util.Utility;
+import com.julia.android.stockhawk.util.NetworkUtility;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -187,11 +187,11 @@ public class MainActivity extends AppCompatActivity implements
 
         QuoteSyncJob.syncImmediately(this);
 
-        if (!Utility.isNetworkAvailable(getApplicationContext()) && adapter.getItemCount() == 0) {
+        if (!NetworkUtility.isNetworkAvailable(getApplicationContext()) && adapter.getItemCount() == 0) {
             swipeRefreshLayout.setRefreshing(false);
             error.setText(getString(R.string.error_no_network));
             error.setVisibility(View.VISIBLE);
-        } else if (!Utility.isNetworkAvailable(getApplicationContext())) {
+        } else if (!NetworkUtility.isNetworkAvailable(getApplicationContext())) {
             swipeRefreshLayout.setRefreshing(false);
             Toast.makeText(this, R.string.toast_no_connectivity, Toast.LENGTH_LONG).show();
         } else if (PrefUtils.getStocks(this).size() == 0) {
@@ -210,7 +210,7 @@ public class MainActivity extends AppCompatActivity implements
     void addStock(String symbol) {
         if (symbol != null && !symbol.isEmpty()) {
 
-            if (Utility.isNetworkAvailable(getApplicationContext())) {
+            if (NetworkUtility.isNetworkAvailable(getApplicationContext())) {
                 swipeRefreshLayout.setRefreshing(true);
             } else {
                 String message = getString(R.string.toast_stock_added_no_connectivity, symbol);

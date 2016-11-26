@@ -20,7 +20,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-public class Utility {
+public class NetworkUtility {
 
     /**
      * Returns true if the network is available or about to become available.
