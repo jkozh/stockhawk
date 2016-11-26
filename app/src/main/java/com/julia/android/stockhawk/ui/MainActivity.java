@@ -112,6 +112,13 @@ public class MainActivity extends AppCompatActivity implements
                 String symbol = adapter.getSymbolAtPosition(viewHolder.getAdapterPosition());
                 PrefUtils.removeStock(MainActivity.this, symbol);
                 getContentResolver().delete(Contract.Quote.makeUriForStock(symbol), null, null);
+
+                // checks if all stocks was removed - shows a message 'no stocks'
+                if (PrefUtils.getStocks(getApplicationContext()).size() == 0) {
+                    swipeRefreshLayout.setRefreshing(false);
+                    error.setText(getString(R.string.error_no_stocks));
+                    error.setVisibility(View.VISIBLE);
+                }
             }
         }).attachToRecyclerView(recyclerView);
 
