@@ -106,7 +106,6 @@ public class StockDetailActivity extends AppCompatActivity implements FetchStock
 
     @Override
     public void onRefresh() {
-        new FetchStockTask(this).execute(symbol);
 
         if (!Utility.isNetworkAvailable(getApplicationContext())) {
             swipeRefreshLayout.setRefreshing(false);
@@ -117,6 +116,7 @@ public class StockDetailActivity extends AppCompatActivity implements FetchStock
             error.setVisibility(View.VISIBLE);
         } else {
             error.setVisibility(View.GONE);
+            new FetchStockTask(this).execute(symbol);
         }
     }
 

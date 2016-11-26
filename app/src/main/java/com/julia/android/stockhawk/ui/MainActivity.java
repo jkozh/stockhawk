@@ -95,8 +95,6 @@ public class MainActivity extends AppCompatActivity implements
         swipeRefreshLayout.setRefreshing(true);
         onRefresh();
 
-
-
         QuoteSyncJob.initialize(this);
         getSupportLoaderManager().initLoader(STOCK_LOADER, null, this);
 
@@ -122,14 +120,16 @@ public class MainActivity extends AppCompatActivity implements
             }
         }).attachToRecyclerView(recyclerView);
 
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        recyclerView.addItemDecoration(
+                new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
         registerReceiver(broadcastReceiver, new IntentFilter(ACTION_ADD_STOCK));
+
 
     }
 
     /**
-     * Receives the non-existing stock name was added by the user
+     * Receive that a non-existing stock name was added by the user
      */
     BroadcastReceiver broadcastReceiver =  new BroadcastReceiver() {
 

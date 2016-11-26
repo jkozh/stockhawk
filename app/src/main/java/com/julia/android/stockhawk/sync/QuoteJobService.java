@@ -40,9 +40,19 @@ public class QuoteJobService extends JobService {
         return true;
     }
 
+    /**
+     * Called by the system if the job is cancelled before being finished.
+     * This generally happens when your job conditions are no longer being met,
+     * such as when the device has been unplugged or if WiFi is no longer available.
+     * So use this method for any safety checks and clean up you may need to do
+     * in response to a half-finished job. Then, return true if you’d like the system
+     * to reschedule the job, or false if it doesn’t matter and the system will drop this job.
+     */
     @Override
     public boolean onStopJob(JobParameters jobParameters) {
+
         Timber.i("Job stopped: %s", jobParameters.getJobId());
+
         return false;
     }
 
