@@ -23,6 +23,8 @@ compile 'com.github.PhilJay:MPAndroidChart:v3.0.0'
 compile 'com.facebook.stetho:stetho:1.4.1'
 ```
 
+## Powered By
+<img src="http://developer.edgar-online.com/public/Mashery/images/clients/edgar/yahoofinance.png" />
 
 ## License
 ```
